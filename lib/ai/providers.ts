@@ -1,3 +1,4 @@
+import { createDeepSeek } from "@ai-sdk/deepseek";
 import { gateway } from "@ai-sdk/gateway";
 import {
   customProvider,
@@ -25,12 +26,20 @@ export const myProvider = isTestEnvironment
     })()
   : customProvider({
       languageModels: {
-        "chat-model": gateway.languageModel("xai/grok-2-vision-1212"),
+        "chat-model": createDeepSeek({
+          apiKey: process.env.DEEPSEEK_API_KEY,
+        })("deepseek-chat"),
         "chat-model-reasoning": wrapLanguageModel({
-          model: gateway.languageModel("xai/grok-3-mini"),
+          model: createDeepSeek({
+            apiKey: process.env.DEEPSEEK_API_KEY,
+          })("deepseek-reasoner"),
           middleware: extractReasoningMiddleware({ tagName: "think" }),
         }),
-        "title-model": gateway.languageModel("xai/grok-2-1212"),
-        "artifact-model": gateway.languageModel("xai/grok-2-1212"),
+        "title-model": createDeepSeek({
+          apiKey: process.env.DEEPSEEK_API_KEY,
+        })("deepseek-chat"),
+        "artifact-model": createDeepSeek({
+          apiKey: process.env.DEEPSEEK_API_KEY,
+        })("deepseek-chat"),
       },
     });
