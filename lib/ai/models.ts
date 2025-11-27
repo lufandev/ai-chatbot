@@ -10,7 +10,7 @@ export const chatModels: ChatModel[] = [
   {
     id: "chat-model",
     name: "deepseek chat",
-    description: "Advanced multimodal model with vision and text capabilities",
+    description: "Fast and efficient text-based conversational model",
   },
   {
     id: "chat-model-reasoning",
