@@ -46,6 +46,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: errorMessage }, { status: 400 });
     }
 
+    // Check if Blob storage is configured
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      return NextResponse.json(
+        {
+          error:
+            "File upload is not configured. Please set BLOB_READ_WRITE_TOKEN environment variable.",
+        },
+        { status: 503 }
+      );
+    }
+
     // Get filename from formData since Blob doesn't have name property
     const filename = (formData.get("file") as File).name;
     const fileBuffer = await file.arrayBuffer();
@@ -56,8 +67,14 @@ export async function POST(request: Request) {
       });
 
       return NextResponse.json(data);
-    } catch (_error) {
-      return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+    } catch (error) {
+      console.error("Blob upload error:", error);
+      return NextResponse.json(
+        {
+          error: "Upload failed. Please check Blob storage configuration.",
+        },
+        { status: 500 }
+      );
     }
   } catch (_error) {
     return NextResponse.json(
